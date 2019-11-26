@@ -1,15 +1,22 @@
-CDF=/apps/netcdf/4.3.0-intel
+CDF=/apps/netcdf/4.7.0/intel/18.0.5.274
 #####################################################################
 # compiler options
 # #####################################################################
-FOPT = -C 
+# FOPT = -C
 
- F90 = ifort
-# #F90 = ifort -warn
+F90 = ifort
+#F90 = ifort -warn
+
+#opt1 = -Doutput_grid_qdeg
+opt1 = -Doutput_grid_hdeg
+
+#opt2 = -Ddebug_output
+
+optall = $(opt1) $(opt2)
 ######################################################################
 # 
 #####################################################################
-OBJS = param.o grdvar.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o
+OBJS = param.o charstrings.o grdvars.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o write_cdf.o
 
 gengrid: $(OBJS)
 	$(F90) $(FOPT) -o gengrid $(OBJS) -L$(CDF)/lib -lnetcdff -lnetcdf 
