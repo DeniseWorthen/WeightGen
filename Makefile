@@ -7,8 +7,8 @@ CDF=/apps/netcdf/4.7.0/intel/18.0.5.274
 F90 = ifort
 #F90 = ifort -warn
 
-#opt1 = -Doutput_grid_qdeg
-opt1 = -Doutput_grid_hdeg
+opt1 = -Doutput_grid_qdeg
+#opt1 = -Doutput_grid_hdeg
 
 #opt2 = -Ddebug_output
 
