@@ -156,7 +156,7 @@ module debugprint
     print '(f12.5,a,f12.5)',lonCu_vert(i,j,3),'        ',lonCu_vert(i,j,4)
 
 
-    i = 1440; j = 10
+    i = ni; j = 10
     print '(f12.5,a,f12.5)',latCt_vert(i,j,2),'        ',latCt_vert(i,j,1)
     print '(a12,f12.5)','          ',latCt(i,j)
     print '(f12.5,a,f12.5)',latCt_vert(i,j,3),'        ',latCt_vert(i,j,4)
