@@ -10,13 +10,15 @@
 ; Prior to running this script, a file containing all the stagger 
 ; locations and their vertices must be created. This file
 ; should be created by reading the MOM6 supergrid. This script
-; assumes the file exists and is named "tripole.mx025.nc". 
+; assumes the file exists and is named "tripole.CRES.nc" where
+; CRES describes the MOM6 resolution (mx025 = 1/4 deg, mx050 =
+; 1/2 deg) 
 ; 
 ; Generating accurate conservative weights requires that the 
 ; vertices of the center T grid cell be given. These values
-; are available in the tripole.mx025.nc file. 
+; are available in the tripole.CRES.nc file. 
 ;
-; The tripole.mx025.nc file is created using the gen_fixgrid.F90
+; The tripole.CRES.nc file is created using the gen_fixgrid.F90
 ; and associated code. 
 ;
 ; Unless the underlying tripole grid changes, this script needs to be
@@ -39,17 +41,24 @@ begin
     generate_dstgrid_SCRIP_files = True
     generate_tripole_rect_weights = True
 
+    ; specify the MOM6 resolution
+    cres = "mx050"
+    ;cres = "mx025"
+
     ; specify a location to use
-        nemsrc     = "/scratch4/NCEPDEV/ocean/save/Denise.Worthen/NEMS_INPUT0.1/ocnicepost/"
+    ;    nemsrc     = "/scratch4/NCEPDEV/ocean/save/Denise.Worthen/NEMS_INPUT0.1/ocnicepost/"
+        nemsrc     = "./"
     ; interpolation methods
     methods        = (/"bilinear" ,"conserve"/)
 
     ; source tripole grid  
             srcloc = nemsrc
-          gridfile = "tripole.mx025.nc"
+          gridfile = "tripole."+cres+".nc"
+    print(gridfile)
        staggerlocs = (/"Ct", "Cu", "Cv", "Bu"/)
 
-    ; destintion grids 
+    ; destintion grids
+    if(cres .eq. "mx025")then
        dstgrds     = (/    "0p25",     "0p5",  "1p0"/)
        dstres      = (/ "0.25deg",  "0.5deg", "1deg"/)
 
@@ -60,6 +69,19 @@ begin
 
         dstxdim    = (/1440,    720,   360/)
         dstydim    = (/ 721,    361,   181/)
+    end if
+    if(cres .eq. "mx050")then
+       dstgrds     = (/     "0p5",  "1p0"/)
+       dstres      = (/  "0.5deg", "1deg"/)
+
+       dstlonbeg   = (/  0.00,   0.00/)
+       dstlonend   = (/359.50, 359.00/)
+       dstlatbeg   = (/-90.00, -90.00/)
+       dstlatend   = (/ 90.00,  90.00/)
+
+        dstxdim    = (/   720,   360/)
+        dstydim    = (/   361,   181/)
+    end if 
 
    if(generate_unstagger_weights)then
 ;----------------------------------------------------------------------
@@ -115,7 +137,7 @@ begin
 
      srcfile = nemsrc+staggerlocs(ii)+"_SCRIP.nc"
      ; this is the file containing the weights
-     wgtfile = nemsrc+"tripole.mx025."+staggerlocs(ii)+".to.Ct.bilinear.nc"
+     wgtfile = nemsrc+"tripole."+cres+"."+staggerlocs(ii)+".to.Ct.bilinear.nc"
 
      ESMF_regrid_gen_weights(srcfile,dstfile,wgtfile,Opt)
      delete(Opt)
@@ -178,7 +200,7 @@ begin
      do ii = 0,dimsizes(dstgrds)-1
       dstfile = nemsrc+"rect."+dstgrds(ii)+"_SCRIP.nc"
       ;this file contains the weights
-      wgtfile = nemsrc+"tripole.mx025.Ct.to.rect."+dstgrds(ii)+"."+methods(jj)+".nc"
+      wgtfile = nemsrc+"tripole."+cres+".Ct.to.rect."+dstgrds(ii)+"."+methods(jj)+".nc"
       ESMF_regrid_gen_weights(srcfile,dstfile,wgtfile,Opt)
      end do
 
