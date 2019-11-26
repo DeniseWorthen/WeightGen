@@ -1,7 +1,7 @@
 module debugprint
 
   use param
-  use grdvar
+  use grdvars
 
   implicit none
 

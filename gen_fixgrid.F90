@@ -77,37 +77,27 @@ program gen_fixgrid
 ! the Ct and Cu grid point locations across the matched seam.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  use netcdf
   use param
-  use grdvar
+  use grdvars
+  use charstrings 
   use debugprint
   use fixgriddefs
-  use netcdf
 
   implicit none
-
-  character(len=256) :: dirsrc = '/scratch4/NCEPDEV/nems/noscrub/emc.nemspara/RT/FV3-MOM6-CICE5/benchmark-20180913/MOM6_FIX_025deg/'
-  character(len=256) :: dirout = '/scratch4/NCEPDEV/ocean/save/Denise.Worthen/NEMS_INPUT0.1/ocnicepost/'
-  character(len= 10) :: res = 'mx025'
-
-  ! super-grid source variables
-  real(kind=8), dimension(0:nx,0:ny)   ::  x,  y
-  real(kind=8), dimension(  nx,0:ny)   :: dx
-  real(kind=8), dimension(0:nx,  ny)   :: dy
 
   real(kind=8) :: dxT, dyT
 
   character(len=256) :: fname_out, fname_in
-  character(len=256) :: history
-  character(len=  8) :: cdate
 
   integer :: rc,ncid
   integer :: id, dim2(2), dim3(3)
   integer :: ni_dim,nj_dim,nv_dim
   integer :: i,j,n,ii,jj,i2,j2
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! set up the arrays to retrieve the vertices
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   iVertCu = iVertCt + 1; jVertCu = jVertCt + 0
   iVertCv = iVertCt + 0; jVertCv = jVertCt + 1
@@ -131,9 +121,9 @@ program gen_fixgrid
   latCv_vert = -9999.0 ; lonCv_vert = -9999.0
   latBu_vert = -9999.0 ; lonBu_vert = -9999.0
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! read the land mask
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   fname_in = trim(dirsrc)//"ocean_mask.nc"
   rc = nf90_open(fname_in, nf90_nowrite, ncid)
@@ -143,9 +133,9 @@ program gen_fixgrid
 
   wet = int(latCt,4)
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! read supergrid file
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   fname_in = trim(dirsrc)//'ocean_hgrid.nc'
 
@@ -168,9 +158,9 @@ program gen_fixgrid
   rc = nf90_close(ncid)
   print *,'super grid size ',size(y,1),size(y,2)
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! fill grid variables
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   do j = 1,nj
    do i = 1,ni
@@ -197,11 +187,11 @@ program gen_fixgrid
   where(lonCu .lt. 0.0)lonCu = lonCu + 360.d0
   where(lonCv .lt. 0.0)lonCv = lonCv + 360.d0
   where(lonBu .lt. 0.0)lonBu = lonBu + 360.d0
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! some basic error checking
 ! find the i-th index of the poles at j= nj
 ! the corner points must lie on the pole
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   ipole = -1
       j = nj
@@ -252,9 +242,9 @@ program gen_fixgrid
    dlatCv(i) = latCt(i,1) + 2.0*(latCt(i,1) - latCv(i,1))
   enddo
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 ! fill grid vertices variables
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   !Ct and Cu grids align in j 
   call fill_vertices(2,nj  , iVertCt,jVertCt, latBu,lonBu, latCt_vert,lonCt_vert)
@@ -280,117 +270,15 @@ program gen_fixgrid
   if(minval(lonCv_vert) .lt. -1.e3)stop
   if(minval(latBu_vert) .lt. -1.e3)stop
   if(minval(lonBu_vert) .lt. -1.e3)stop
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!---------------------------------------------------------------------
 ! write out grid file
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!---------------------------------------------------------------------
 
   ! create a history attribute
    call date_and_time(date=cdate)
    history = 'created on '//trim(cdate)//' from '//trim(fname_in)
 
-  ! define the output variables and file name
-  call fixgrid_typedefine
-  fname_out= trim(dirout)//'tripole.'//trim(res)//'.nc'
-  print *,trim(fname_out)
+   call write_cdf
 
-  ! create the file
-  rc = nf90_create(trim(fname_out), nf90_write, ncid)
-  print *, 'writing grid to ',trim(fname_out)
-  print *, 'nf90_create = ',trim(nf90_strerror(rc))
-
-  rc = nf90_def_dim(ncid,'ni', ni, ni_dim)
-  rc = nf90_def_dim(ncid,'nj', nj, nj_dim)
-  rc = nf90_def_dim(ncid,'nv', nv, nv_dim)
-  
-  !mask
-  dim2(2) = nj_dim
-  dim2(1) = ni_dim
-   rc = nf90_def_var(ncid, 'wet', nf90_int, dim2, id)
-
-  !area
-  dim2(2) = nj_dim
-  dim2(1) = ni_dim
-   rc = nf90_def_var(ncid, 'area', nf90_double, dim2, id)
-   rc = nf90_put_att(ncid, id,     'units',  'm2')
-
-  dim2(2) = nj_dim
-  dim2(1) = ni_dim
-  do ii = 1,ncoord
-   rc = nf90_def_var(ncid, trim(fixgrid(ii)%var_name), nf90_double, dim2, id)
-   rc = nf90_put_att(ncid, id,     'units', trim(fixgrid(ii)%unit_name))
-   rc = nf90_put_att(ncid, id, 'long_name', trim(fixgrid(ii)%long_name))
-   if(trim(fixgrid(ii)%var_name(1:3)) .eq. "lon")then
-    rc = nf90_put_att(ncid, id,  'lon_bounds', trim(fixgrid(ii)%vertices))
-   else
-    rc = nf90_put_att(ncid, id,  'lat_bounds', trim(fixgrid(ii)%vertices))
-   endif
-  enddo
-  dim3(3) = nv_dim
-  dim3(2) = nj_dim
-  dim3(1) = ni_dim
-  do ii = ncoord+1,ncoord+nverts
-   rc = nf90_def_var(ncid, trim(fixgrid(ii)%var_name), nf90_double, dim3, id)
-   rc = nf90_put_att(ncid, id,     'units', trim(fixgrid(ii)%unit_name))
-   rc = nf90_put_att(ncid, id, 'long_name', trim(fixgrid(ii)%long_name))
-  enddo
-
-   rc = nf90_put_att(ncid, nf90_global, 'history', trim(history))
-   rc = nf90_enddef(ncid)
-
-  rc = nf90_inq_varid(ncid,   'wet',      id)
-  rc = nf90_put_var(ncid,        id,     wet)
-
-  rc = nf90_inq_varid(ncid,  'area',      id)
-  rc = nf90_put_var(ncid,        id,  areaCt)
-
-  rc = nf90_inq_varid(ncid,  'lonCt',     id)
-  rc = nf90_put_var(ncid,        id,   lonCt)
-
-  rc = nf90_inq_varid(ncid,  'latCt',     id)
-  rc = nf90_put_var(ncid,        id,   latCt)
-
-  rc = nf90_inq_varid(ncid, 'lonCv',      id)
-  rc = nf90_put_var(ncid,        id,   lonCv)
-
-  rc = nf90_inq_varid(ncid, 'latCv',      id)
-  rc = nf90_put_var(ncid,        id,   latCv)
-  
-  rc = nf90_inq_varid(ncid, 'lonCu',      id)
-  rc = nf90_put_var(ncid,        id,   lonCu)
-
-  rc = nf90_inq_varid(ncid, 'latCu',      id)
-  rc = nf90_put_var(ncid,        id,   latCu)
-
-  rc = nf90_inq_varid(ncid, 'lonBu',      id)
-  rc = nf90_put_var(ncid,        id,   lonBu)
-
-  rc = nf90_inq_varid(ncid, 'latBu',      id)
-  rc = nf90_put_var(ncid,        id,   latBu)
-
-  ! vertices
-  rc = nf90_inq_varid(ncid,  'lonCt_vert',     id)
-  rc = nf90_put_var(ncid,         id,  lonCt_vert)
-
-  rc = nf90_inq_varid(ncid,  'latCt_vert',     id)
-  rc = nf90_put_var(ncid,         id,  latCt_vert)
-
-  rc = nf90_inq_varid(ncid, 'lonCv_vert',      id)
-  rc = nf90_put_var(ncid,        id,   lonCv_vert)
-
-  rc = nf90_inq_varid(ncid, 'latCv_vert',      id)
-  rc = nf90_put_var(ncid,        id,   latCv_vert)
-
-  rc = nf90_inq_varid(ncid, 'lonCu_vert',      id)
-  rc = nf90_put_var(ncid,        id,   lonCu_vert)
-
-  rc = nf90_inq_varid(ncid, 'latCu_vert',      id)
-  rc = nf90_put_var(ncid,        id,   latCu_vert)
-
-  rc = nf90_inq_varid(ncid, 'lonBu_vert',      id)
-  rc = nf90_put_var(ncid,        id,   lonBu_vert)
-
-  rc = nf90_inq_varid(ncid, 'latBu_vert',      id)
-  rc = nf90_put_var(ncid,        id,   latBu_vert)
-
-  rc = nf90_close(ncid)
 end program gen_fixgrid
