@@ -157,12 +157,6 @@ program gen_fixgrid
   print *,'super grid size ',size(y,1),size(y,2)
 
 !---------------------------------------------------------------------
-! find the angle on the q grid
-!---------------------------------------------------------------------
-
-  call find_angq
-
-!---------------------------------------------------------------------
 ! fill grid variables
 !---------------------------------------------------------------------
 
@@ -184,15 +178,25 @@ program gen_fixgrid
             dxT = dx(i2-1,j2-1) + dx(i2,j2-1)
             dyT = dy(i2-1,j2-1) + dy(i2-1,j2)
     areaCt(i,j) = dxT*dyT
-    ! for MOM6 grid, angq is not reversed as for CICE grid
-    anglet(i,j) = angq(i2-1,j2-1)
    enddo
   enddo
+
+!---------------------------------------------------------------------
+! find the angle; for MOM6 we don't need the angles on the corner
+! grid points, so we can use the MOM6 code directly
+!---------------------------------------------------------------------
+
+  call find_ang
+
+!---------------------------------------------------------------------
+!
+!---------------------------------------------------------------------
 
   where(lonCt .lt. 0.0)lonCt = lonCt + 360.d0
   where(lonCu .lt. 0.0)lonCu = lonCu + 360.d0
   where(lonCv .lt. 0.0)lonCv = lonCv + 360.d0
   where(lonBu .lt. 0.0)lonBu = lonBu + 360.d0
+
 !---------------------------------------------------------------------
 ! some basic error checking
 ! find the i-th index of the poles at j= nj

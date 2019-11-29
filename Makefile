@@ -16,7 +16,7 @@ optall = $(opt1) $(opt2)
 ######################################################################
 # 
 #####################################################################
-OBJS = param.o charstrings.o grdvars.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o write_cdf.o find_angq.o
+OBJS = param.o charstrings.o grdvars.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o write_cdf.o find_ang.o
 
 gengrid: $(OBJS)
 	$(F90) $(FOPT) -o gengrid $(OBJS) -L$(CDF)/lib -lnetcdff -lnetcdf 

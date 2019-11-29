@@ -14,7 +14,6 @@ module charstrings
     '/scratch2/NCEPDEV/climate/Denise.Worthen/NEMS_INPUT0.1/MOM6_FIX_05deg/'
   character(len= 10) :: res = 'mx050'
 #endif
-
   character(len=256) :: dirout = './'
   character(len=100) :: maskfile = 'ocean_topog.nc'
   character(len= 12) :: maskname = 'wet'

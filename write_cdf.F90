@@ -10,7 +10,7 @@ subroutine write_cdf
 
   ! local variables
 
-  character(len=256) :: fname_out, fname_in
+  character(len=256) :: fname_out
   integer :: ii,id,rc, ncid, dim2(2),dim3(3)
   integer :: ni_dim,nj_dim,nv_dim
 
