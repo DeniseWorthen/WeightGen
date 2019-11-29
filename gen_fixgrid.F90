@@ -88,12 +88,10 @@ program gen_fixgrid
 
   real(kind=8) :: dxT, dyT
 
-  character(len=256) :: fname_out, fname_in
+  character(len=256) :: fname_in
 
-  integer :: rc,ncid
-  integer :: id, dim2(2), dim3(3)
-  integer :: ni_dim,nj_dim,nv_dim
-  integer :: i,j,n,ii,jj,i2,j2
+  integer :: rc,ncid,id
+  integer :: i,j,i2,j2
 
 !---------------------------------------------------------------------
 ! set up the arrays to retrieve the vertices
@@ -159,6 +157,12 @@ program gen_fixgrid
   print *,'super grid size ',size(y,1),size(y,2)
 
 !---------------------------------------------------------------------
+! find the angle on the q grid
+!---------------------------------------------------------------------
+
+  call find_angq
+
+!---------------------------------------------------------------------
 ! fill grid variables
 !---------------------------------------------------------------------
 
@@ -180,6 +184,8 @@ program gen_fixgrid
             dxT = dx(i2-1,j2-1) + dx(i2,j2-1)
             dyT = dy(i2-1,j2-1) + dy(i2-1,j2)
     areaCt(i,j) = dxT*dyT
+    ! for MOM6 grid, angq is not reversed as for CICE grid
+    anglet(i,j) = angq(i2-1,j2-1)
    enddo
   enddo
 

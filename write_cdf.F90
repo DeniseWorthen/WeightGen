@@ -43,6 +43,12 @@ subroutine write_cdf
    rc = nf90_def_var(ncid, 'area', nf90_double, dim2, id)
    rc = nf90_put_att(ncid, id,     'units',  'm2')
 
+  !angleT
+  dim2(2) = nj_dim
+  dim2(1) = ni_dim
+   rc = nf90_def_var(ncid, 'anglet', nf90_double, dim2, id)
+   rc = nf90_put_att(ncid, id,     'units',  'radians')
+
   dim2(2) = nj_dim
   dim2(1) = ni_dim
   do ii = 1,ncoord
@@ -64,14 +70,17 @@ subroutine write_cdf
    rc = nf90_put_att(ncid, id, 'long_name', trim(fixgrid(ii)%long_name))
   enddo
 
-   rc = nf90_put_att(ncid, nf90_global, 'history', trim(history))
-   rc = nf90_enddef(ncid)
+  rc = nf90_put_att(ncid, nf90_global, 'history', trim(history))
+  rc = nf90_enddef(ncid)
 
   rc = nf90_inq_varid(ncid,   'wet',      id)
   rc = nf90_put_var(ncid,        id,     wet)
 
   rc = nf90_inq_varid(ncid,  'area',      id)
   rc = nf90_put_var(ncid,        id,  areaCt)
+
+  rc = nf90_inq_varid(ncid,'anglet',      id)
+  rc = nf90_put_var(ncid,        id,  anglet)
 
   rc = nf90_inq_varid(ncid,  'lonCt',     id)
   rc = nf90_put_var(ncid,        id,   lonCt)
