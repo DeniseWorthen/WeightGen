@@ -43,7 +43,7 @@ subroutine find_ang
      anglet(i,j) = atan2(lon_scale*((lonB(1,2) - lonB(2,1)) + (lonB(2,2) - lonB(1,1))), &
                     (LatBu(ii,J) - LatBu(I,jj)) + &
                     (LatBu(I,J) - LatBu(ii,jj)) )
-     anglet(i,j) = sin(anglet(i,j))
+                    
       !lon_scale = cos(pi_720deg*((LatBu(I-1,J-1) + LatBu(I,J)) + &
       !                           (LatBu(I,J-1) + LatBu(I-1,J)) ) )
      !anglet(i,j) = atan2(lon_scale*((lonB(1,2) - lonB(2,1)) + (lonB(2,2) - lonB(1,1))), &
