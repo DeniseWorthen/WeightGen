@@ -5,10 +5,9 @@ module grdvars
   implicit none
 
   ! super-grid source variables
-  real(kind=8), dimension(0:nx,0:ny)   :: x, y, angq
+  real(kind=8), dimension(0:nx,0:ny)   :: x, y
   real(kind=8), dimension(  nx,0:ny)   :: dx
   real(kind=8), dimension(0:nx,  ny)   :: dy
-
   
   ! pole locations
   integer(kind=4) :: ipole(2)
@@ -24,6 +23,8 @@ module grdvars
 
   ! areas of Ct grid cell
   real(kind=8), dimension(ni,nj) :: areaCt
+  ! rotation angle on Ct
+  real(kind=8), dimension(ni,nj) :: anglet
 
   ! vertices of each stagger location
   real(kind=8), dimension(ni,nj,nv) :: latCt_vert, lonCt_vert

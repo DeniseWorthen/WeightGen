@@ -9,16 +9,22 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 begin
 
 
+    ; specify the MOM6 resolution
+    ;cres = "mx050"
+    cres = "mx025"
+
 ;---Specify a location to use
-        nemsrc     = "/scratch4/NCEPDEV/ocean/save/Denise.Worthen/NEMS_INPUT0.1/ocnicepost/"
+;        nemsrc     = "/scratch4/NCEPDEV/ocean/save/Denise.Worthen/NEMS_INPUT0.1/ocnicepost/"
+        nemsrc     = "./"
+
             srcloc = nemsrc
-          gridfile = "tripole.grid.mx025.nc"
+          gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct", "Cu", "Cv", "Bu"/)
 
       gf = addfile(nemsrc+gridfile,"r")
    ;ii =1
    do ii = 1,dimsizes(staggerlocs)-1
-         wgtfile = nemsrc+"tripole.grid.mx025."+staggerlocs(ii)+".to.Ct.bilinear.nc"
+         wgtfile = nemsrc+"tripole."+cres+"."+staggerlocs(ii)+".to.Ct.bilinear.nc"
        ; get a field
          varname = "lon"+staggerlocs(ii)
             avar = gf->$varname$

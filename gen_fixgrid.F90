@@ -88,12 +88,10 @@ program gen_fixgrid
 
   real(kind=8) :: dxT, dyT
 
-  character(len=256) :: fname_out, fname_in
+  character(len=256) :: fname_in
 
-  integer :: rc,ncid
-  integer :: id, dim2(2), dim3(3)
-  integer :: ni_dim,nj_dim,nv_dim
-  integer :: i,j,n,ii,jj,i2,j2
+  integer :: rc,ncid,id
+  integer :: i,j,i2,j2
 
 !---------------------------------------------------------------------
 ! set up the arrays to retrieve the vertices
@@ -183,10 +181,22 @@ program gen_fixgrid
    enddo
   enddo
 
+!---------------------------------------------------------------------
+! find the angle; for MOM6 we don't need the angles on the corner
+! grid points, so we can use the MOM6 code directly
+!---------------------------------------------------------------------
+
+  call find_ang
+
+!---------------------------------------------------------------------
+!
+!---------------------------------------------------------------------
+
   where(lonCt .lt. 0.0)lonCt = lonCt + 360.d0
   where(lonCu .lt. 0.0)lonCu = lonCu + 360.d0
   where(lonCv .lt. 0.0)lonCv = lonCv + 360.d0
   where(lonBu .lt. 0.0)lonBu = lonBu + 360.d0
+
 !---------------------------------------------------------------------
 ! some basic error checking
 ! find the i-th index of the poles at j= nj
