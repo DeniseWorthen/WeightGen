@@ -56,7 +56,6 @@ begin
     ; source tripole grid  
             srcloc = nemsrc
           gridfile = "tripole."+cres+".nc"
-    print(gridfile)
        staggerlocs = (/"Ct", "Cu", "Cv", "Bu"/)
 
     ; destintion grids
@@ -239,16 +238,21 @@ begin
    end if
 
    if(generate_tripole_tripole_weights)then
+      srccres = "mx025"
+      dstcres = "mx050"
+    ; re-define interpolation methods
+    methods := (/"bilinear" ,"neareststod"/)
+    gridfile = "tripole."+srccres+".nc"
+          gf = addfile(nemsrc+gridfile,"r")
+    
 ;----------------------------------------------------------------------
 ; generate the weight file  for tripole Ct->tripole Ct
 ; bilinear only
 ;----------------------------------------------------------------------
 
-    srccres = "mx025"
-    dstcres = "mx050"
-         jj = 0
-    srcfile = nemsrc+"Ct."+srccres+"_SCRIP.nc"
-    dstfile = nemsrc+"Ct."+dstcres+"_SCRIP.nc"
+    do jj = 0,dimsizes(methods)-1
+     srcfile = nemsrc+"Ct."+srccres+"_SCRIP.nc"
+     dstfile = nemsrc+"Ct."+dstcres+"_SCRIP.nc"
 
       Opt                   = True
       Opt@ForceOverwrite    = True
@@ -261,6 +265,7 @@ begin
       wgtfile = nemsrc+"tripole."+srccres+".Ct.to."+dstcres+".Ct."+methods(jj)+".nc"
       ESMF_regrid_gen_weights(srcfile,dstfile,wgtfile,Opt)
 
+    end do
    end if
 exit
 end
