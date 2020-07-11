@@ -7,6 +7,9 @@ module param
 #ifdef output_grid_hdeg
   integer, parameter :: ni =  720, nj = 576
 #endif
+#ifdef output_grid_1deg
+  integer, parameter :: ni =  360, nj = 320
+#endif
 
   ! number of vertices
   integer, parameter :: nv = 4

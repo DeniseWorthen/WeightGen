@@ -129,6 +129,9 @@ program gen_fixgrid
   rc = nf90_get_var(ncid,       id, latCt) !temp use
   rc = nf90_close(ncid)
 
+#ifdef output_grid_1deg
+  where(latCt .gt. 0.5d0)latCt = 1.0d0
+#endif
   wet = int(latCt,4)
 
 !---------------------------------------------------------------------
@@ -213,7 +216,7 @@ program gen_fixgrid
   enddo
   print *,'poles found at ',ipole,latBu(ipole(1),nj),latBu(ipole(2),nj)
 
-  call checkseam
+  !call checkseam
 
   do i = 1,ni
     i2 = ipole(2)+(ipole(1)-i)+1

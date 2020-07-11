@@ -14,6 +14,12 @@ module charstrings
     '/scratch2/NCEPDEV/climate/Denise.Worthen/NEMS_INPUT0.1/MOM6_FIX_05deg/'
   character(len= 10) :: res = 'mx050'
 #endif
+#ifdef output_grid_1deg
+! temporary location
+  character(len=256) :: dirsrc = &
+    '/scratch2/NCEPDEV/climate/Denise.Worthen/NEMS_INPUT0.1/OM4_360x320_C180/mosaic_unpacked.20150713/'
+  character(len= 10) :: res = 'mx100'
+#endif
   ! temporary output location for testing
   character(len=256) :: dirout = '/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/'
   character(len=100) :: maskfile = 'ocean_topog.nc'
