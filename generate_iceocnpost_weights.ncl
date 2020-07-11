@@ -37,16 +37,17 @@ begin
 
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
-    generate_srcgrid_SCRIP_files = False
-    generate_dstgrid_SCRIP_files = False
-    generate_unstagger_weights = False
-    generate_restagger_weights = False
-    generate_tripole_rect_weights = False
+    generate_srcgrid_SCRIP_files = True
+    generate_dstgrid_SCRIP_files = True
+    generate_unstagger_weights = True
+    generate_restagger_weights = True
+    generate_tripole_rect_weights = True
     generate_tripole_tripole_weights = True
 
     ; specify the MOM6 resolution
     ;cres = "mx050"
-    cres = "mx025"
+    ;cres = "mx025"
+    cres = "mx100"
 
     ; specify a location to use
         nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
@@ -83,6 +84,18 @@ begin
         dstxdim    = (/   720,   360/)
         dstydim    = (/   361,   181/)
     end if 
+    if(cres .eq. "mx100")then
+       dstgrds     = (/  "1p0"/)
+       dstres      = (/ "1deg"/)
+
+       dstlonbeg   = (/   0.00/)
+       dstlonend   = (/ 359.00/)
+       dstlatbeg   = (/ -90.00/)
+       dstlatend   = (/  90.00/)
+
+        dstxdim    = (/   360/)
+        dstydim    = (/   181/)
+    end if
 
    if(generate_srcgrid_SCRIP_files)then
 ;----------------------------------------------------------------------
@@ -238,8 +251,15 @@ begin
    end if
 
    if(generate_tripole_tripole_weights)then
+    if(cres .eq. "mx050")then              ; 1/4 => 1/2 tripole
       srccres = "mx025"
       dstcres = "mx050"
+    end if
+    if(cres .eq. "mx100")then              ; 1/4 => 1deg tripole
+      srccres = "mx025"
+      dstcres = "mx100"
+    end if
+    
     ; re-define interpolation methods
     methods := (/"bilinear" ,"neareststod"/)
     gridfile = "tripole."+srccres+".nc"
