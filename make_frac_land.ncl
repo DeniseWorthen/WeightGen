@@ -4,7 +4,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;**********************************************************
 begin
 
-      RT = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
+      CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
    RTOUT = "/scratch2/NCEPDEV/stmp1/Denise.Worthen/ForShan/mapped_omask/"
 
    ; first replicates current baseline c96 test
@@ -20,8 +20,8 @@ begin
      ares = "C"+fv3res(nf) 
   outname = ares+"."+ores+"."
   
-    wgtsfile = RT+"Ct."+ores+".to."+ares+".nc"
-      ocngrd = addfile(RT+"Ct."+ores+"_SCRIP_land.nc","r")
+    wgtsfile = RTOUT+"Ct."+ores+".to."+ares+".nc"
+      ocngrd = addfile(CL+"Ct."+ores+"_SCRIP_land.nc","r")
     ;print(wgtsfile)
     ;print(ocngrd)
     print(outname)
