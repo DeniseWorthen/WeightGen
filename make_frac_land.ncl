@@ -76,7 +76,7 @@ begin
   ; ("http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_8_0_0/ESMF_refdoc/node3.html#SECTION03020000000000000000")
   do i = 0,n_s-1
     ii = row(i)-1
-    jj = col(i)
+    jj = col(i)-1
    dst_field(ii) = dst_field(ii) + S(i)*src_field(jj)
   end do
   
