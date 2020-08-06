@@ -1,5 +1,8 @@
 ;------------------------------------------------------------------
-; Denise.Worthen@noaa.gov  (Feb 2019)
+; Creates SCRIP file with land mask on tripole resolution and then
+; creates the mesh file from that SCRIP file 
+;
+; Denise.Worthen@noaa.gov
 ;
 ; This file still has to be loaded manually
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
@@ -8,16 +11,15 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
-
-    ; specify the MOM6 resolution
-    ;cres = "mx050"
-    ;cres = "mx025"
-    cres = "mx100"
-
     ; specify a location to use
         nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
 
-    ; 
+    ; specify the tripole resolution
+    cice6res = (/"mx100", "mx050", "mx025"/)
+    nfiles = dimsizes(cice6res)
+
+  do nf = 0,nfiles-1
+    cres = cice6res(nf)
     ; source tripole grid  
             srcloc = nemsrc
           gridfile = "tripole."+cres+".nc"
@@ -54,7 +56,24 @@ begin
 
     ; substitue local version of curvilinear_to_SCRIP here
     my_curvilinear_to_SCRIP(srcfile, gf->$srclatname$, gf->$srclonname$, Opt)
+    delete(Opt)
 
+;----------------------------------------------------------------------
+; use the generated SCRIP file to create the mesh
+;----------------------------------------------------------------------
+
+   esmfbindir = "/scratch1/NCEPDEV/nems/emc.nemspara/soft/esmf/8.0.1-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/bin/"
+     meshname = nemsrc+"mesh."+cres+".nc"
+      esmfcmd = "ESMF_Scrip2Unstruct "+srcfile+" "+meshname+" 0 ESMF"
+
+   syscmd = "module use -a /scratch1/NCEPDEV/nems/emc.nemspara/soft/modulefiles"
+   system(syscmd)
+   syscmd = esmfbindir+esmfcmd
+   print("converting to mesh using "+syscmd)
+   system(syscmd)
+
+   delete([/srcfile, gf/]) 
+ end do ; nfiles 
 exit
 end
 
