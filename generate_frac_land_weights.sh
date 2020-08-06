@@ -14,9 +14,9 @@
 
 # this script can be run in an interactive job; set nprocs to the number of processors the interactive job is using
 # salloc --x11=first -q debug -t 0:30:00 --nodes=1 -A marine-cpu
-rgcmd="srun --ntasks=4"
+# rgcmd="srun --ntasks=4"
 # in a serial job
-#rgcmd=""
+rgcmd=""
 
 set -x
 
