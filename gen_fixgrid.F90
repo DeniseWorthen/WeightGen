@@ -7,7 +7,8 @@ program gen_fixgrid
 ! to generate the CICE5 grid from the MOM6 supergrid (ocean_hgrid.nc)
 !
 ! this code generates a fixed grid file and is used to create the interpolation
-! weights for ice/ocean post
+! weights for regridding between various combinations of tripole and rectilinear
+! grids
 !
 ! information on MOM6 supergrid can be found at
 ! https://gist.github.com/adcroft/c1e207024fe1189b43dddc5f1fe7dd6c
