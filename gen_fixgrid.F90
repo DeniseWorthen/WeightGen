@@ -130,10 +130,9 @@ program gen_fixgrid
   rc = nf90_get_var(ncid,       id, latCt) !temp use
   rc = nf90_close(ncid)
 
-#ifdef output_grid_1deg
   where(latCt .gt. 0.5d0)latCt = 1.0d0
-#endif
-  wet = int(latCt,4)
+    wet = int(latCt,4)
+  latCt = 0.0d0
 
 !---------------------------------------------------------------------
 ! read supergrid file

@@ -7,9 +7,9 @@ FOPT = -C
 
 F90 = ifort
 
-#opt1 = -Doutput_grid_qdeg
+opt1 = -Doutput_grid_qdeg
 #opt1 = -Doutput_grid_hdeg
-opt1 = -Doutput_grid_1deg
+#opt1 = -Doutput_grid_1deg
 
 #opt2 = -Ddebug_output
 
