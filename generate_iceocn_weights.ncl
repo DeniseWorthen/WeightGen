@@ -12,7 +12,7 @@
 ; should be created by reading the MOM6 supergrid. This script
 ; assumes the file exists and is named "tripole.CRES.nc" where
 ; CRES describes the MOM6 resolution (mx025 = 1/4 deg, mx050 =
-; 1/2 deg) 
+; 1/2 deg, mx100 = 1.0 deg) 
 ; 
 ; Generating accurate conservative weights requires that the 
 ; vertices of the center T grid cell be given. These values
@@ -59,7 +59,7 @@ begin
           gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct", "Cu", "Cv", "Bu"/)
 
-    ; destintion grids
+    ; destination grids
     if(cres .eq. "mx025")then
        dstgrds     = (/    "0p25",     "0p5",  "1p0"/)
        dstres      = (/ "0.25deg",  "0.5deg", "1deg"/)
@@ -251,6 +251,11 @@ begin
    end if
 
    if(generate_tripole_tripole_weights)then
+;----------------------------------------------------------------------
+; generate the weight file  for tripole Ct->tripole Ct
+; bilinear only
+;----------------------------------------------------------------------
+
     if(cres .eq. "mx050")then              ; 1/4 => 1/2 tripole
       srccres = "mx025"
       dstcres = "mx050"
@@ -265,11 +270,6 @@ begin
     gridfile = "tripole."+srccres+".nc"
           gf = addfile(nemsrc+gridfile,"r")
     
-;----------------------------------------------------------------------
-; generate the weight file  for tripole Ct->tripole Ct
-; bilinear only
-;----------------------------------------------------------------------
-
     do jj = 0,dimsizes(methods)-1
      srcfile = nemsrc+"Ct."+srccres+"_SCRIP.nc"
      dstfile = nemsrc+"Ct."+dstcres+"_SCRIP.nc"
