@@ -12,7 +12,7 @@ load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
     ; specify a location to use
-        nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
+        nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
 
     ; specify the tripole resolution
     cice6res = (/"mx100", "mx050", "mx025"/)

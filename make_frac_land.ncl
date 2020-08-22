@@ -4,8 +4,10 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;**********************************************************
 begin
 
-      CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
-   RTOUT = "/scratch2/NCEPDEV/stmp1/Denise.Worthen/ForShan/mapped_omask/"
+   ;   CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
+   ;RTOUT = "/scratch2/NCEPDEV/stmp1/Denise.Worthen/ForShan/mapped_omask/"
+      CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
+   RTOUT = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
 
    ; first replicates current baseline c96 test
    fv3res = (/     96,      96,     192,     192,     384,     384,     768/)

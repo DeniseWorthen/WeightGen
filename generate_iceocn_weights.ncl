@@ -37,20 +37,23 @@ begin
 
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
-    generate_srcgrid_SCRIP_files = False
-    generate_dstgrid_SCRIP_files = False
-    generate_unstagger_weights = False
-    generate_restagger_weights = False
-    generate_tripole_rect_weights = False
-    generate_tripole_tripole_weights = False
+    generate_srcgrid_SCRIP_files = True
+    generate_dstgrid_SCRIP_files = True
+    generate_unstagger_weights = True
+    generate_restagger_weights = True
+    generate_tripole_rect_weights = True
+    ; this should only be true for cres=050 or 100
+    generate_tripole_tripole_weights = True
 
     ; specify the MOM6 resolution
-    cres = "mx050"
+    ; 025 must be run before 050 or 100 in order to generate
+    ; tripole to tripole weights
     ;cres = "mx025"
-    ;cres = "mx100"
+    ;cres = "mx050"
+    cres = "mx100"
 
     ; specify a location to use
-        nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
+        nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
     ; interpolation methods
     methods        = (/"bilinear" ,"conserve"/)
 
