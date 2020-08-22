@@ -91,7 +91,7 @@ program gen_fixgrid
 
   character(len=256) :: fname_in
 
-  integer :: rc,ncid,id
+  integer :: rc,ncid,id,xtype
   integer :: i,j,i2,j2
 
 !---------------------------------------------------------------------
@@ -124,15 +124,19 @@ program gen_fixgrid
 ! read the land mask
 !---------------------------------------------------------------------
 
-  fname_in = trim(dirsrc)//"ocean_mask.nc"
+  fname_in = trim(dirsrc)//trim(maskfile)
+
   rc = nf90_open(fname_in, nf90_nowrite, ncid)
-  rc = nf90_inq_varid(ncid, 'mask',    id) 
-  rc = nf90_get_var(ncid,       id, latCt) !temp use
+  print *, 'reading ocean mask from ',trim(fname_in)
+  print *, 'nf90_open = ',trim(nf90_strerror(rc))
+
+  rc = nf90_inq_varid(ncid,  trim(maskname), id)
+  rc = nf90_inquire_variable(ncid, id, xtype=xtype)
+  if(xtype .eq. 5)rc = nf90_get_var(ncid,      id,  wet4)
+  if(xtype .eq. 6)rc = nf90_get_var(ncid,      id,  wet8)
   rc = nf90_close(ncid)
 
-  where(latCt .gt. 0.5d0)latCt = 1.0d0
-    wet = int(latCt,4)
-  latCt = 0.0d0
+  if(xtype.eq. 6)wet4 = real(wet8,4)
 
 !---------------------------------------------------------------------
 ! read supergrid file

@@ -12,9 +12,6 @@ module grdvars
   ! pole locations
   integer(kind=4) :: ipole(2)
 
-  ! land mask
-  integer(kind=4), dimension(ni,nj) :: wet
-
   ! grid stagger locations
   real(kind=8), dimension(ni,nj) :: latCt, lonCt ! lat and lon of T on C-grid
   real(kind=8), dimension(ni,nj) :: latCv, lonCv ! lat and lon of V on C-grid
@@ -40,5 +37,9 @@ module grdvars
   real(kind=8), dimension(ni) :: xlonCu, xlatCu
   ! latitude spacing at bottom of grid
   real(kind=8), dimension(ni) :: dlatBu, dlatCv
+
+  ! ocean mask from fixed file, stored as either r4 or r8
+     real(kind=4), dimension(ni,nj) :: wet4
+     real(kind=8), dimension(ni,nj) :: wet8
 
 end module grdvars
