@@ -1,6 +1,6 @@
 ; Check weights
 ;
-; Create fields on stagger grid and see that they are 
+; Create fields on stagger grid and see that they are
 ; interpolated to Ct grid bilinearly
 ;
 ; This file still has to be loaded manually
@@ -36,7 +36,7 @@ begin
        imax = dims(1)
      
       ; will create field with integer values
-      ; bilinear interpolation should result in 0.5 values 
+      ; bilinear interpolation should result in 0.5 values
        if(staggerlocs(ii) .eq. "Cu")then
         do i = 0,imax-1
           avar(:,i) = todouble(i)
@@ -84,4 +84,3 @@ begin
    end do
 exit
 end
-

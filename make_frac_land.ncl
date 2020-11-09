@@ -19,7 +19,7 @@ begin
    do nf= 0,nfiles-1
       res = fv3res(nf)
      ores = mom6res(nf)
-     ares = "C"+fv3res(nf) 
+     ares = "C"+fv3res(nf)
   outname = ares+"."+ores+"."
   
     wgtsfile = RTOUT+"Ct."+ores+".to."+ares+".nc"

@@ -1,6 +1,6 @@
 ;------------------------------------------------------------------
 ; Creates SCRIP file with land mask on tripole resolution and then
-; creates the mesh file from that SCRIP file 
+; creates the mesh file from that SCRIP file
 ;
 ; Denise.Worthen@noaa.gov
 ;
@@ -20,13 +20,13 @@ begin
 
   do nf = 0,nfiles-1
     cres = cice6res(nf)
-    ; source tripole grid  
+    ; source tripole grid
             srcloc = nemsrc
           gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct"/)
 
 ;----------------------------------------------------------------------
-; first generate SCRIP grid files 
+; first generate SCRIP grid files
 ;----------------------------------------------------------------------
 
       ii = 0
@@ -72,8 +72,7 @@ begin
    print("converting to mesh using "+syscmd)
    system(syscmd)
 
-   delete([/srcfile, gf/]) 
- end do ; nfiles 
+   delete([/srcfile, gf/])
+ end do ; nfiles
 exit
 end
-

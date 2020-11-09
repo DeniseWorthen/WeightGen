@@ -1,7 +1,7 @@
-; This is a copy of the curvilinear_to_SCRIP script provided 
+; This is a copy of the curvilinear_to_SCRIP script provided
 ; inside of EMSF_regridding.ncl as of NCL v 6.5.0, 30-April-2019
 ; which does not require the grid input values to be re-ordered
-; 
+;
 ;======================================================================
 ; This function receives a 2D curvilinear grid and mask and stores
 ; it in FName NetCDF file based on SCRIP standard.
@@ -40,13 +40,13 @@ begin
 
 ;---Do we need to create a large file?
     if (.not.isatt_logical_false(Opt,"LargeFile")) then
-      setfileoption("nc","Format","LargeFile") 
+      setfileoption("nc","Format","LargeFile")
     end if
 
 ;---Do we need to create a netcdf-4 file?
     if (isatt(Opt,"NetCDFType").and.\
         str_lower(Opt@NetCDFType).eq."netcdf4") then
-      setfileoption("nc","Format","netcdf4") 
+      setfileoption("nc","Format","netcdf4")
       nc_file_type = "netcdf4"
     else
       nc_file_type = "netcdf3"
@@ -97,7 +97,7 @@ begin
     
 ;---Define the SCRIP dimensions
     grid_size    = nlat*nlon   ; This is number of data points (grid nodes)
-    grid_corners = 4	
+    grid_corners = 4
     grid_rank    = 2
 	
     FDimNames = (/ "grid_size","grid_corners","grid_rank" /)
@@ -118,11 +118,11 @@ begin
     DummyAtt1       = 0
     DummyAtt2       = 0
 ;
-; The conversion to character arrays for NetCDF-4 files is a 
-; work-around.  ESMF_RegridWeightGen uses the F90 interface to 
-; read NetCDF-4 files, which doesn't yet have support for 
+; The conversion to character arrays for NetCDF-4 files is a
+; work-around.  ESMF_RegridWeightGen uses the F90 interface to
+; read NetCDF-4 files, which doesn't yet have support for
 ; NetCDF-4 "string" types.
-; 
+;
     if(nc_file_type.eq."netcdf3") then
       DummyAtt1@units = "degrees"
       DummyAtt2@units = "unitless"
@@ -186,7 +186,7 @@ begin
         ;print(grid_corner_lat(0,:))
         ;delete(dims)
 
-; explicitly do what reshape is trying to do  
+; explicitly do what reshape is trying to do
       grid_corner_lat = new( (/ grid_size, grid_corners/),typeof(GridCornerLat))
       grid_corner_lon = new( (/ grid_size, grid_corners/),typeof(GridCornerLon))
       do n = 0,grid_corners-1
@@ -217,7 +217,7 @@ begin
           if(TESTIT) then
             calc_SCRIP_corners_boundaries_2(lat2d,grid_corner_lat,"lat",Opt)
             calc_SCRIP_corners_boundaries_2(lon2d,grid_corner_lon,"lon",Opt)
-          else 
+          else
             calc_SCRIP_corners_boundaries(lat2d,lon2d,grid_corner_lat,grid_corner_lon,Opt)
           end if
         else
@@ -236,7 +236,7 @@ begin
             if(TESTIT) then
               calc_SCRIP_corners_boundaries_2(lat2d,grid_corner_lat,"lat",Opt)
               calc_SCRIP_corners_boundaries_2(lon2d,grid_corner_lon,"lon",Opt)
-            else 
+            else
               calc_SCRIP_corners_boundaries(lat2d,lon2d,grid_corner_lat,grid_corner_lon,Opt)
             end if
           end if
