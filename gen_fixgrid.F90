@@ -3,7 +3,7 @@ program gen_fixgrid
 ! Denise.Worthen@noaa.gov
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! this is a stripped down and modified version of the code used 
+! this is a stripped down and modified version of the code used
 ! to generate the CICE5 grid from the MOM6 supergrid (ocean_hgrid.nc)
 !
 ! this code generates a fixed grid file and is used to create the interpolation
@@ -17,10 +17,10 @@ program gen_fixgrid
 !
 !
 !         SuperGrid                 Reduced grid
-! 
+!
 !  i-1,j+1         i+1,j+1
 !     X-------X-------X             I-1,J      I,J
-!     |       |       |                X-------X      
+!     |       |       |                X-------X
 !     |       |       |                |       |
 !     |       | i,j   |                |   T   |
 !     X-------X-------X                |       |
@@ -29,7 +29,7 @@ program gen_fixgrid
 !     |       |       |
 !     X-------X-------X
 !  i-1,j-1         i+1,j-1
-!    
+!
 ! Area of the T-grid cell is obtained as in MOM_grid_initialize where
 ! tmpV = dx on SG and tmpU is dy on SG
 !
@@ -39,14 +39,14 @@ program gen_fixgrid
 ! Tripole Seam flip: ipL,ipR left,right poles on seam
 !
 ! ipL-1     ipL    ipL+1       ipR-1     ipR    ipR+1
-!    x-------x-------x     |||    x-------x-------x 
+!    x-------x-------x     |||    x-------x-------x
 !
 ! Fold over; ipL must align with ipR
-!  
+!
 !  ipR+1     ipR    ipR-1
-!     x-------x-------x 
+!     x-------x-------x
 !  ipL-1     ipL    ipL+1
-!     x-------x-------x 
+!     x-------x-------x
 !
 !
 ! SCRIP requires that the vertices be ordered counter-clockwise so that
@@ -54,25 +54,25 @@ program gen_fixgrid
 ! Vertices are defined counter-clockwise from upper right. Ct-grid vertices
 ! are located on the Bu grid; Cu vertices on the Cv grid, Cv vertices on the Cu
 ! grid and Bu vertices on the Ct grid. For example, for the Ct-grid, the vertices
-! are: 
+! are:
 !             Vertex #2             Vertex #1
-!             Bu(i-1,j)             Bu(i,j)  
+!             Bu(i-1,j)             Bu(i,j)
 !                         Ct(i,j)
 !           Bu(i-1,j-1)             Bu(i,j-1)
 !             Vertex #3             Vertex #4
 !
 ! so that the vertices of any Ct(i,j) are found as off-sets of the i,j index on the
-! Bu grid 
-! 
+! Bu grid
+!
 !     iVertCt(4) = (/0, -1, -1, 0/)
 !     jVertCt(4) = (/0, 0, -1, -1/)
-! 
+!
 ! Careful examination of the Cu,Cv and Bu grids lead to similar definitions for the
 ! i,j offsets required to extract the other grid stragger vertices locations, all of
 ! which can be defined in terms of the iVertCt and jVertCt values
-!  
+!
 ! Special treatment is require at the bottom of the grid, where the verticies of the
-! Ctand Cu grid must be set manually (note, these points are on land.) The top of 
+! Ctand Cu grid must be set manually (note, these points are on land.) The top of
 ! the grid also requires special treatment because the required verticies are located
 ! across the tripole seam. This is accomplished by creating 1-d arrays which hold
 ! the Ct and Cu grid point locations across the matched seam.
@@ -81,7 +81,7 @@ program gen_fixgrid
   use netcdf
   use param
   use grdvars
-  use charstrings 
+  use charstrings
   use debugprint
   use fixgriddefs
 
@@ -154,10 +154,10 @@ program gen_fixgrid
   rc = nf90_inq_varid(ncid, 'y', id)  !lat
   rc = nf90_get_var(ncid,    id,  y)
 
-  rc = nf90_inq_varid(ncid, 'dx', id) 
+  rc = nf90_inq_varid(ncid, 'dx', id)
   rc = nf90_get_var(ncid,     id, dx)
 
-  rc = nf90_inq_varid(ncid, 'dy', id) 
+  rc = nf90_inq_varid(ncid, 'dy', id)
   rc = nf90_get_var(ncid,     id, dy)
 
   rc = nf90_close(ncid)
@@ -253,7 +253,7 @@ program gen_fixgrid
   ! print *,i,xlonCu(i),lonCu(i2,nj)
   !enddo
 
-  !approx lat at grid bottom 
+  !approx lat at grid bottom
   do i = 1,ni
    dlatBu(i) = latBu(i,1) + 2.0*(latCu(i,1) - latBu(i,1))
    dlatCv(i) = latCt(i,1) + 2.0*(latCt(i,1) - latCv(i,1))
@@ -263,7 +263,7 @@ program gen_fixgrid
 ! fill grid vertices variables
 !---------------------------------------------------------------------
 
-  !Ct and Cu grids align in j 
+  !Ct and Cu grids align in j
   call fill_vertices(2,nj  , iVertCt,jVertCt, latBu,lonBu, latCt_vert,lonCt_vert)
   call           fill_bottom(iVertCt,jVertCt, latBu,lonBu, latCt_vert,lonCt_vert,dlatBu)
 

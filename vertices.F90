@@ -39,7 +39,7 @@ subroutine fill_bottom(iVert,jVert,lat,lon,latvert,lonvert,dlat)
 
   integer :: i,j,n,ii,jj
 
-  ! fill in grid bottom (j=1) 
+  ! fill in grid bottom (j=1)
   ! vertices 1,2 are available
   ! vertices 3,4 must be set manually
       j = 1
