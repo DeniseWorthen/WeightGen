@@ -3,17 +3,53 @@ program gen_fixgrid
 ! Denise.Worthen@noaa.gov
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! this
-! to generate the CICE5 grid from the MOM6 supergrid (ocean_hgrid.nc)
-!
-! this code generates a fixed grid file and is used to create the interpolation
-! weights for regridding between various combinations of tripole and rectilinear
-! grids
+! This code generates files the fixed grid and land mask file for the CICE
+! model on the MOM6 tripole grid. It also generates a fixed grid file which
+! contains all the vertice locations on the tripole grid. This fixed grid
+! file is used to create the interpolation weights for regridding between
+! various combinations of tripole and rectilinear grids.
 !
 ! information on MOM6 supergrid can be found at
 ! https://gist.github.com/adcroft/c1e207024fe1189b43dddc5f1fe7dd6c
 !
 ! also: https://mom6.readthedocs.io/en/latest/api/generated/modules/mom_grid.html
+!
+! also:
+! MOM_grid_initialize.F90 :
+!  MOM6 variable geoLonBu <==> CICE variable ulon
+!  MOM6 variable geoLatBu <==> CICE variable ulat
+!  MOM6 variable     dxCv <==> CICE variable htn
+!  MOM6 variable     dyCu <==> CICE variable hte
+!
+! MOM6 code snippets follow:
+!
+! from MOM_grid_initialize.F90  (tmpZ = x)
+!  do J=G%JsdB,G%JedB ; do I=G%IsdB,G%IedB ; i2 = 2*I ; j2 = 2*J
+!    G%geoLonBu(I,J) = tmpZ(i2,j2)
+! so....
+!          ulon(I,J) = x(i2,j2)
+
+! from MOM_grid_initialize.F90  (tmpZ = y)
+!  do J=G%JsdB,G%JedB ; do I=G%IsdB,G%IedB ; i2 = 2*I ; j2 = 2*J
+!    G%geoLatBu(I,J) = tmpZ(i2,j2)
+! so....
+!          ulat(I,J) = y(i2,j2)
+
+! from MOM_grid_initialize.F90  (tmpV = dx)
+!  do J=G%JsdB,G%JedB ; do i=G%isd,G%ied ; i2 = 2*i ; j2 = 2*j
+!    dxCv(i,J) = tmpV(i2-1,j2) + tmpV(i2,j2)
+! so....
+!     htn(i,J) =   dx(i2-1,j2) +   dx(i2,j2)
+
+! from MOM_grid_initialize.F90  (tmpU = dy)
+!  do J=G%JsdB,G%JedB ; do i=G%isd,G%ied ; i2 = 2*i ; j2 = 2*j
+!    dyCu(I,j) = tmpU(i2,j2-1) + tmpU(i2,j2)
+! so....
+!     hte(I,j) =   dy(i2,j2-1) +   dy(i2,j2)
+!
+! rotation angle on supergrid vertices can be found
+! using the formula in MOM_shared_initialization.F90, accounting
+! for indexing difference between reduced grid and super grid
 !
 !
 !         SuperGrid                 Reduced grid
@@ -30,13 +66,28 @@ program gen_fixgrid
 !     X-------X-------X
 !  i-1,j-1         i+1,j-1
 !
+! so that in angle formulae
+!         I==>i+1,I-1==>i-1
+!         J==>j+1,J-1==>j-1
+!
+! CICE expects angle to be XY -> LatLon so change the sign from MOM6 value
+! This has been determined from the HYCOM code: ALL/cice/src/grid2cice.f
+!
+!            anglet(i,j) =    -pang(i+i0,  j+j0)   !radians
+!c           pang is from lon-lat to x-y, but anglet is the reverse
+!
+! where anglet is the angle variable being written to the CICE grid file
+! and pang is HYCOM's own rotation angle.
+!
 ! Area of the T-grid cell is obtained as in MOM_grid_initialize where
 ! tmpV = dx on SG and tmpU is dy on SG
 !
 !    dxT(i,j) = tmpV(i2-1,j2-1) + tmpV(i2,j2-1)
 !    dyT(i,j) = tmpU(i2-1,j2-1) + tmpU(i2-1,j2)
 !
-! Tripole Seam flip: ipL,ipR left,right poles on seam
+! This code utilizes a "seam flip" to obtain the required values across
+! the tripole seam. If ipL an ipR are the i-indices of the pole along the
+! last j-row of the reduced grid, then:
 !
 ! ipL-1     ipL    ipL+1       ipR-1     ipR    ipR+1
 !    x-------x-------x     |||    x-------x-------x
@@ -164,12 +215,26 @@ program gen_fixgrid
   print *,'super grid size ',size(y,1),size(y,2)
 
 !---------------------------------------------------------------------
+! find the angle on the q grid
+!---------------------------------------------------------------------
+
+    call find_angq
+
+!---------------------------------------------------------------------
 ! fill grid variables
 !---------------------------------------------------------------------
 
   do j = 1,nj
    do i = 1,ni
      i2 = 2*i ; j2 = 2*j
+    !deg->rad
+      ulon(i,j) =     x(i2,j2)*deg2rad
+      ulat(i,j) =     y(i2,j2)*deg2rad
+    !in rad already
+     angle(i,j) = -angq(i2,j2)
+    !m->cm
+       htn(i,j) = (dx(i2-1,j2) + dx(i2,j2))*100.0
+       hte(i,j) = (dy(i2,j2-1) + dy(i2,j2))*100.0
     !deg
      lonBu(i,j) =     x(i2,j2)
      latBu(i,j) =     y(i2,j2)
@@ -185,15 +250,27 @@ program gen_fixgrid
             dxT = dx(i2-1,j2-1) + dx(i2,j2-1)
             dyT = dy(i2-1,j2-1) + dy(i2-1,j2)
     areaCt(i,j) = dxT*dyT
+    !in rad already
+    anglet(i,j) = angq(i2-1,j2-1)
    enddo
   enddo
 
 !---------------------------------------------------------------------
-! find the angle; for MOM6 we don't need the angles on the corner
-! grid points, so we can use the MOM6 code directly
+! For the 1/4deg grid, hte at j=720 and j = 1440 is identically=0.0 for
+! j > 840 (64.0N). These are land points, but since CICE uses hte to
+! generate remaining variables, setting them to zero will cause problems
+! For 1deg grid, hte at ni/2 and ni are very small O~10-12, so test for
+! hte < 1.0
 !---------------------------------------------------------------------
 
-  call find_ang
+   print *,'min vals of hte at folds ',minval(hte(ni/2,:)),minval(hte(ni,:))
+   do j = 1,nj
+      ii = ni/2
+    if(hte(ii,j) .le. 1.0)hte(ii,j) = 0.5*(hte(ii-1,j) + hte(ii+1,j))
+      ii = ni
+    if(hte(ii,j) .le. 1.0)hte(ii,j) = 0.5*(hte(ii-1,j) + hte(   1,j))
+   enddo
+   print *,'min vals of hte at folds ',minval(hte(ni/2,:)),minval(hte(ni,:))
 
 !---------------------------------------------------------------------
 !
@@ -220,7 +297,7 @@ program gen_fixgrid
   enddo
   print *,'poles found at ',ipole,latBu(ipole(1),nj),latBu(ipole(2),nj)
 
-  !call checkseam
+  call checkseam
 
   do i = 1,ni
     i2 = ipole(2)+(ipole(1)-i)+1
@@ -289,13 +366,25 @@ program gen_fixgrid
   if(minval(lonBu_vert) .lt. -1.e3)stop
 
 !---------------------------------------------------------------------
-! write out grid file
+! write out grid file files
 !---------------------------------------------------------------------
 
   ! create a history attribute
    call date_and_time(date=cdate)
    history = 'created on '//trim(cdate)//' from '//trim(fname_in)
 
-   call write_cdf
+   call write_tripolegrid
+   
+   call write_cicegrid
+
+!---------------------------------------------------------------------
+! extract the kmt into a separate file
+!---------------------------------------------------------------------
+
+   fname_in =  trim(dirout)//'grid_cice_NEMS_'//trim(res)//'.nc'
+  fname_out = trim(dirout)//'kmtu_cice_NEMS_'//trim(res)//'.nc'
+
+     cmdstr = 'ncks -O -v kmt '//trim(fname_in)//'  '//trim(fname_out)
+     rc = system(trim(cmdstr))
 
 end program gen_fixgrid

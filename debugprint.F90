@@ -14,6 +14,37 @@ module debugprint
     j = nj
     i1 = ipole(1); i2 = ipole(2)+1
 
+    !htn must be the same along seam
+     j = nj
+    i1 = ipole(1); i2 = ipole(2)+1
+    print *,'HTN across seam '
+    print *,htn(i1-2,j),htn(i2+2,j)
+    print *,htn(i1-1,j),htn(i2+1,j)
+    print *,htn(i1,  j),htn(i2,  j)
+    print *,htn(i1+1,j),htn(i2-1,j)
+    print *,htn(i1+2,j),htn(i2-2,j)
+  
+    print *,'latCv across seam '
+    print *,latCv(i1-2,j),latCv(i2+2,j)
+    print *,latCv(i1-1,j),latCv(i2+1,j)
+    print *,latCv(i1,  j),latCv(i2,  j)
+    print *,latCv(i1+1,j),latCv(i2-1,j)
+    print *,latCv(i1+2,j),latCv(i2-2,j)
+  
+    print *,'lonCv across seam '
+    print *,lonCv(i1-2,j),lonCv(i2+2,j)
+    print *,lonCv(i1-1,j),lonCv(i2+1,j)
+    print *,lonCv(i1,  j),lonCv(i2,  j)
+    print *,lonCv(i1+1,j),lonCv(i2-1,j)
+    print *,lonCv(i1+2,j),lonCv(i2-2,j)
+  
+    print *,'angleT across seam '
+    print *,angleT(i1-2,j),angleT(i2+2,j)
+    print *,angleT(i1-1,j),angleT(i2+1,j)
+    print *,angleT(i1,  j),angleT(i2,  j)
+    print *,angleT(i1+1,j),angleT(i2-1,j)
+    print *,angleT(i1+2,j),angleT(i2-2,j)
+
     print *,'latCu across seam '
     print *,latCu(i1-3,j),latCu(i2+2,j),latCu(i1-3,j)-latCu(i2+2,j)
     print *,latCu(i1-2,j),latCu(i2+1,j)
