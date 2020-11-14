@@ -8,7 +8,10 @@ module grdvars
   real(kind=8), dimension(0:nx,0:ny)   :: x, y
   real(kind=8), dimension(  nx,0:ny)   :: dx
   real(kind=8), dimension(0:nx,  ny)   :: dy
-  
+ 
+  !super-grid replicate row
+  real(kind=8), dimension(0:nx,0:ny+1) :: xsgp1, ysgp1
+ 
   ! pole locations
   integer(kind=4) :: ipole(2)
 
@@ -41,5 +44,10 @@ module grdvars
   ! ocean mask from fixed file, stored as either r4 or r8
      real(kind=4), dimension(ni,nj) :: wet4
      real(kind=8), dimension(ni,nj) :: wet8
+
+  ! ice grid variables
+  real(kind=8), dimension(ni,nj) :: ulon, ulat
+  real(kind=8), dimension(ni,nj) ::  htn, hte
+  real(kind=8), dimension(ni,nj) :: angle
 
 end module grdvars
