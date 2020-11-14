@@ -132,6 +132,8 @@ program gen_fixgrid
   use netcdf
   use param
   use grdvars
+  use angles
+  use physcon
   use charstrings
   use debugprint
   use fixgriddefs
@@ -140,10 +142,13 @@ program gen_fixgrid
 
   real(kind=8) :: dxT, dyT
 
-  character(len=256) :: fname_in
+  character(len=256) :: fname_out, fname_in
+  character(len=300) :: cmdstr
 
   integer :: rc,ncid,id,xtype
   integer :: i,j,i2,j2
+  integer :: ii
+  integer :: system
 
 !---------------------------------------------------------------------
 ! set up the arrays to retrieve the vertices
@@ -215,7 +220,7 @@ program gen_fixgrid
   print *,'super grid size ',size(y,1),size(y,2)
 
 !---------------------------------------------------------------------
-! find the angle on the q grid
+! find the angle on corners---this requires the supergrid
 !---------------------------------------------------------------------
 
     call find_angq
@@ -250,10 +255,17 @@ program gen_fixgrid
             dxT = dx(i2-1,j2-1) + dx(i2,j2-1)
             dyT = dy(i2-1,j2-1) + dy(i2-1,j2)
     areaCt(i,j) = dxT*dyT
-    !in rad already
-    anglet(i,j) = angq(i2-1,j2-1)
    enddo
   enddo
+
+!---------------------------------------------------------------------
+! find the angle on centers---this does not requires the supergrid
+!---------------------------------------------------------------------
+
+    call find_ang
+
+  print *,'ANGLET ',minval(anglet),maxval(anglet)
+  print *,'ANGLE  ',minval(angle),maxval(angle)
 
 !---------------------------------------------------------------------
 ! For the 1/4deg grid, hte at j=720 and j = 1440 is identically=0.0 for
@@ -374,7 +386,7 @@ program gen_fixgrid
    history = 'created on '//trim(cdate)//' from '//trim(fname_in)
 
    call write_tripolegrid
-   
+#ifdef test
    call write_cicegrid
 
 !---------------------------------------------------------------------
@@ -386,5 +398,6 @@ program gen_fixgrid
 
      cmdstr = 'ncks -O -v kmt '//trim(fname_in)//'  '//trim(fname_out)
      rc = system(trim(cmdstr))
+#endif
 
 end program gen_fixgrid

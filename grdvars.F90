@@ -5,7 +5,7 @@ module grdvars
   implicit none
 
   ! super-grid source variables
-  real(kind=8), dimension(0:nx,0:ny)   :: x, y
+  real(kind=8), dimension(0:nx,0:ny)   :: x, y, angq
   real(kind=8), dimension(  nx,0:ny)   :: dx
   real(kind=8), dimension(0:nx,  ny)   :: dy
  
@@ -23,8 +23,10 @@ module grdvars
 
   ! areas of Ct grid cell
   real(kind=8), dimension(ni,nj) :: areaCt
-  ! rotation angle on Ct
+  ! rotation angle on Ct (opposite sense from angle)
   real(kind=8), dimension(ni,nj) :: anglet
+  ! rotation angle on Bu
+  real(kind=8), dimension(ni,nj) :: angle
 
   ! vertices of each stagger location
   real(kind=8), dimension(ni,nj,nv) :: latCt_vert, lonCt_vert
@@ -48,6 +50,5 @@ module grdvars
   ! ice grid variables
   real(kind=8), dimension(ni,nj) :: ulon, ulat
   real(kind=8), dimension(ni,nj) ::  htn, hte
-  real(kind=8), dimension(ni,nj) :: angle
 
 end module grdvars

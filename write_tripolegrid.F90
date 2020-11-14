@@ -1,4 +1,4 @@
-subroutine write_cdf
+subroutine write_tripolegrid
 
    use param
    use grdvars
@@ -133,4 +133,4 @@ subroutine write_cdf
 
   rc = nf90_close(ncid)
 
-end subroutine write_cdf
+end subroutine write_tripolegrid

@@ -21,7 +21,7 @@ subroutine find_ang
 ! rotation angle for "use_bugs" = false case from MOM6
 ! src/initialization/MOM_shared_initialization.F90 but allow for not
 ! having halo values
-! note this does not reproduce sin_rot,cos_rot found in MOM6 output 
+! note this does not reproduce sin_rot,cos_rot found in MOM6 output
 ! differences are ~O 10-6
 !---------------------------------------------------------------------
 
