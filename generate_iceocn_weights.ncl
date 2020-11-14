@@ -7,19 +7,19 @@
 ; rectilinear grids. Weights will be generated using NCL's ESMF
 ; regridding script which relies on ESMF_RegridWeightGen.
 ;
-; Prior to running this script, a file containing all the stagger 
+; Prior to running this script, a file containing all the stagger
 ; locations and their vertices must be created. This file
 ; should be created by reading the MOM6 supergrid. This script
 ; assumes the file exists and is named "tripole.CRES.nc" where
 ; CRES describes the MOM6 resolution (mx025 = 1/4 deg, mx050 =
-; 1/2 deg, mx100 = 1.0 deg) 
-; 
-; Generating accurate conservative weights requires that the 
+; 1/2 deg, mx100 = 1.0 deg)
+;
+; Generating accurate conservative weights requires that the
 ; vertices of the center T grid cell be given. These values
-; are available in the tripole.CRES.nc file. 
+; are available in the tripole.CRES.nc file.
 ;
 ; The tripole.CRES.nc file is created using the gen_fixgrid.F90
-; and associated code. 
+; and associated code.
 ;
 ; Unless the underlying tripole grid changes, this script needs to be
 ; run one time only.
@@ -57,7 +57,7 @@ begin
     ; interpolation methods
     methods        = (/"bilinear" ,"conserve"/)
 
-    ; source tripole grid  
+    ; source tripole grid
             srcloc = nemsrc
           gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct", "Cu", "Cv", "Bu"/)
@@ -86,7 +86,7 @@ begin
 
         dstxdim    = (/   720,   360/)
         dstydim    = (/   361,   181/)
-    end if 
+    end if
     if(cres .eq. "mx100")then
        dstgrds     = (/  "1p0"/)
        dstres      = (/ "1deg"/)
@@ -132,8 +132,8 @@ begin
 
     ; substitue local version of curvilinear_to_SCRIP here
     my_curvilinear_to_SCRIP(srcfile, gf->$srclatname$, gf->$srclonname$, Opt)
-    delete(Opt) 
-   end do 
+    delete(Opt)
+   end do
 
     ; close
     delete(gf)
@@ -293,4 +293,3 @@ begin
 
 exit
 end
-
