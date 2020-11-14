@@ -2,7 +2,7 @@ module icegriddefs
 
   implicit none
 
-  integer, parameter :: maxvars = 20
+  integer, parameter :: ncicevars = 20
 
   type icedefs
     character(len=12)   ::  var_name
@@ -11,7 +11,7 @@ module icegriddefs
     character(len= 2)   ::  var_type
   end type icedefs
 
-  type(icedefs) :: icegrid(maxvars)
+  type(icedefs) :: icegrid(ncicevars)
   contains
 
   subroutine ice_typedefine
@@ -51,41 +51,6 @@ module icegriddefs
    icegrid(ii)%long_name = 'ocean fraction at T-cell centers'
    icegrid(ii)%unit_name = 'none'
    icegrid(ii)%var_type  = 'i4'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'anglet'
-   icegrid(ii)%long_name = 'Angle at center (T) points'
-   icegrid(ii)%unit_name = 'radians'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'lonT'
-   icegrid(ii)%long_name = 'Longitude of center (T) points'
-   icegrid(ii)%unit_name = 'degrees'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'latT'
-   icegrid(ii)%long_name = 'Latitude of center (T) points'
-   icegrid(ii)%unit_name = 'degrees'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'lonCv'
-   icegrid(ii)%long_name = 'Longitude of meridional velocity (Cv) points'
-   icegrid(ii)%unit_name = 'degrees'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'latCv'
-   icegrid(ii)%long_name = 'Latitude of meridional velocity (Cv) points'
-   icegrid(ii)%unit_name = 'degrees'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'lonCu'
-   icegrid(ii)%long_name = 'Longitude of zonal velocity (Cu) points'
-   icegrid(ii)%unit_name = 'degrees'
-
-   ii = ii + 1
-   icegrid(ii)%var_name  = 'latCu'
-   icegrid(ii)%long_name = 'Latitude of zonal velocity (Cu) points'
-   icegrid(ii)%unit_name = 'degrees'
 
  end subroutine ice_typedefine
 end module icegriddefs

@@ -11,13 +11,11 @@ opt1 = -Doutput_grid_qdeg
 #opt1 = -Doutput_grid_hdeg
 #opt1 = -Doutput_grid_1deg
 
-#opt2 = -Ddebug_output
-
 optall = $(opt1) $(opt2)
 ######################################################################
 #
 #####################################################################
-OBJS = param.o charstrings.o grdvars.o angles.o physcon.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o write_tripolegrid.o icedefs.o
+OBJS = param.o charstrings.o grdvars.o angles.o physcon.o debugprint.o fixgriddefs.o gen_fixgrid.o vertices.o write_tripolegrid.o icedefs.o write_cicegrid.o
 
 gengrid: $(OBJS)
 	$(F90) $(FOPT) -o gengrid $(OBJS) -L$(CDF)/lib -lnetcdff -lnetcdf

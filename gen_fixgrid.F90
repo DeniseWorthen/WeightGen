@@ -264,8 +264,8 @@ program gen_fixgrid
 
     call find_ang
 
-  print *,'ANGLET ',minval(anglet),maxval(anglet)
-  print *,'ANGLE  ',minval(angle),maxval(angle)
+    print *,'ANGLET ',minval(anglet),maxval(anglet)
+    print *,'ANGLE  ',minval(angle),maxval(angle)
 
 !---------------------------------------------------------------------
 ! For the 1/4deg grid, hte at j=720 and j = 1440 is identically=0.0 for
@@ -386,7 +386,7 @@ program gen_fixgrid
    history = 'created on '//trim(cdate)//' from '//trim(fname_in)
 
    call write_tripolegrid
-#ifdef test
+
    call write_cicegrid
 
 !---------------------------------------------------------------------
@@ -398,6 +398,5 @@ program gen_fixgrid
 
      cmdstr = 'ncks -O -v kmt '//trim(fname_in)//'  '//trim(fname_out)
      rc = system(trim(cmdstr))
-#endif
 
 end program gen_fixgrid
