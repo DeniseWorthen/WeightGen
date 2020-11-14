@@ -1,2 +1,6 @@
 *jnl*
-*.mod *.i *.nc *.Log
+*.mod
+*.i
+*.nc
+*.Log
+gengrid
