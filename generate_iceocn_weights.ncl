@@ -38,7 +38,7 @@ begin
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
     generate_srcgrid_SCRIP_files = True
-    generate_dstgrid_SCRIP_files = True
+    generate_dstgrid_SCRIP_files = False
     generate_unstagger_weights = True
     generate_restagger_weights = True
     generate_tripole_rect_weights = False
@@ -48,10 +48,10 @@ begin
     ; specify the MOM6 resolution
     ; 025 must be run before 050 or 100 in order to generate
     ; tripole to tripole weights
-    cres = "mx025"
+    ;cres = "mx025"
     ;cres = "mx050"
     ;cres = "mx100"
-    ;cres = "mx072"
+    cres = "mx072"
 
     ; specify locations to use
         dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
