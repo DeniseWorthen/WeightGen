@@ -11,8 +11,9 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
-    ; specify a location to use
-        nemsrc     = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
+    ; specify locations to use
+    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
 
     ; specify the tripole resolution
     cice6res = (/"mx100", "mx050", "mx025"/)
@@ -21,7 +22,7 @@ begin
   do nf = 0,nfiles-1
     cres = cice6res(nf)
     ; source tripole grid
-            srcloc = nemsrc
+            srcloc = dirsrc
           gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct"/)
 
@@ -30,7 +31,7 @@ begin
 ;----------------------------------------------------------------------
 
       ii = 0
-      gf = addfile(nemsrc+gridfile,"r")
+      gf = addfile(dirsrc+gridfile,"r")
 
     Opt                   = True
     Opt@ForceOverwrite    = True
@@ -40,7 +41,7 @@ begin
     Opt@Check             = True
 
     print("working on stagger loc "+staggerlocs(ii))
-          srcfile = nemsrc+staggerlocs(ii)+"."+cres+"_SCRIP_land.nc"
+          srcfile = dirsrc+staggerlocs(ii)+"."+cres+"_SCRIP_land.nc"
        srclonname = "lon"+staggerlocs(ii)
        srclatname = "lat"+staggerlocs(ii)
     cornerlonname = "lon"+staggerlocs(ii)+"_vert"
@@ -63,7 +64,7 @@ begin
 ;----------------------------------------------------------------------
 
    esmfbindir = "/scratch1/NCEPDEV/nems/emc.nemspara/soft/esmf/8.0.1-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/bin/"
-     meshname = nemsrc+"mesh."+cres+".nc"
+     meshname = dirout+"mesh."+cres+".nc"
       esmfcmd = "ESMF_Scrip2Unstruct "+srcfile+" "+meshname+" 0 ESMF"
 
    syscmd = "module use -a /scratch1/NCEPDEV/nems/emc.nemspara/soft/modulefiles"
