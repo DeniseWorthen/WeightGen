@@ -4,14 +4,16 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;**********************************************************
 begin
 
-   ;   CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
-   ;RTOUT = "/scratch2/NCEPDEV/stmp1/Denise.Worthen/ForShan/mapped_omask/"
-      CL = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
-   RTOUT = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout2/"
+   ;dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/TTout/"
+   ;dirout = "/scratch2/NCEPDEV/stmp1/Denise.Worthen/ForShan/mapped_omask/"
+    dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+   dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
 
    ; first replicates current baseline c96 test
-   fv3res = (/     96,      96,     192,     192,     384,     384,     768/)
-  mom6res = (/"mx025", "mx100", "mx050", "mx100", "mx050", "mx025", "mx025"/)
+  ; fv3res = (/     96,      96,     192,     192,     384,     384,     768/)
+  ;mom6res = (/"mx025", "mx100", "mx050", "mx100", "mx050", "mx025", "mx025"/)
+   fv3res = (/     96/)
+  mom6res = (/"mx100"/)
 
     ntile = 6
    nfiles = dimsizes(fv3res)
@@ -22,8 +24,8 @@ begin
      ares = "C"+fv3res(nf)
   outname = ares+"."+ores+"."
   
-    wgtsfile = RTOUT+"Ct."+ores+".to."+ares+".nc"
-      ocngrd = addfile(CL+"Ct."+ores+"_SCRIP_land.nc","r")
+    wgtsfile = dirout+"Ct."+ores+".to."+ares+".nc"
+      ocngrd = addfile(dirsrc+"Ct."+ores+"_SCRIP_land.nc","r")
     ;print(wgtsfile)
     ;print(ocngrd)
     print(outname)
@@ -87,7 +89,7 @@ begin
 ;**********************************************************
 
   do i = 0, ntile-1
-    ofile = RTOUT+outname+"tile"+sprinti("%d", i+1)+".nc"
+    ofile = dirout+outname+"tile"+sprinti("%d", i+1)+".nc"
     print("output file "+ofile)
     system("rm -f "+ofile)
     fout = addfile(ofile, "c")
@@ -130,7 +132,7 @@ begin
      end do
 
      do i = 0, ntile-1
-      ofile = RTOUT+outname+"tile"+sprinti("%d", i+1)+".nc"
+      ofile = dirout+outname+"tile"+sprinti("%d", i+1)+".nc"
        fout = addfile(ofile, "w")
        fout->$vname$ = (/ var3d(i,:,:) /)
      end do
