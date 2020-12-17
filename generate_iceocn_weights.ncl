@@ -38,9 +38,9 @@ begin
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
     generate_srcgrid_SCRIP_files = True
-    generate_dstgrid_SCRIP_files = True
-    generate_unstagger_weights = True
-    generate_restagger_weights = True
+    generate_dstgrid_SCRIP_files = False
+    generate_unstagger_weights = False
+    generate_restagger_weights = False
     generate_tripole_rect_weights = False
     ; if set True, requires that the mx025 SCRIP file has been generated
     generate_tripole_tripole_weights = True
@@ -48,9 +48,10 @@ begin
     ; specify the MOM6 resolution
     ; 025 must be run before 050 or 100 in order to generate
     ; tripole to tripole weights
-    cres = "mx025"
+    ;cres = "mx025"
     ;cres = "mx050"
     ;cres = "mx100"
+    cres = "mx300"
 
     ; specify locations to use
         dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
@@ -267,6 +268,10 @@ begin
     if(cres .eq. "mx100")then              ; 1/4 => 1deg tripole
       srccres = "mx025"
       dstcres = "mx100"
+    end if
+    if(cres .eq. "mx300")then              ; 1/4 => 3deg tripole
+      srccres = "mx025"
+      dstcres = "mx300"
     end if
     
     ; abort of the Ct SCRIP file for the mx025 grid has not yet been

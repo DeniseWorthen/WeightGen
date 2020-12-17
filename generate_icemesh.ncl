@@ -16,7 +16,8 @@ begin
     dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
 
     ; specify the tripole resolution
-    cice6res = (/"mx100", "mx050", "mx025"/)
+    ;cice6res = (/"mx100", "mx050", "mx025"/)
+    cice6res = (/"mx300"/)
     nfiles = dimsizes(cice6res)
 
   do nf = 0,nfiles-1
