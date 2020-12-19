@@ -52,6 +52,7 @@ begin
     ;cres = "mx050"
     ;cres = "mx100"
     cres = "mx300"
+    ;cres = "mx072"
 
     ; specify locations to use
         dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
@@ -272,6 +273,10 @@ begin
     if(cres .eq. "mx300")then              ; 1/4 => 3deg tripole
       srccres = "mx025"
       dstcres = "mx300"
+    end if
+    if(cres .eq. "mx072")then              ; 1/4 => 072deg tripole
+      srccres = "mx025"
+      dstcres = "mx072"
     end if
     
     ; abort of the Ct SCRIP file for the mx025 grid has not yet been
