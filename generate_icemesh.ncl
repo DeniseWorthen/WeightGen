@@ -12,13 +12,13 @@ load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
     ; specify locations to use
-    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
-    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210201/"
+    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210201/"
 
     ; specify the tripole resolution
-    ;cice6res = (/"mx100", "mx050", "mx025"/)
+    cice6res = (/"mx100", "mx050", "mx025"/)
     ;cice6res = (/"mx300"/)
-    cice6res = (/"mx072"/)
+    ;cice6res = (/"mx072"/)
     nfiles = dimsizes(cice6res)
 
   do nf = 0,nfiles-1
@@ -65,7 +65,9 @@ begin
 ; use the generated SCRIP file to create the mesh
 ;----------------------------------------------------------------------
 
-   esmfbindir = "/scratch1/NCEPDEV/nems/emc.nemspara/soft/esmf/8.0.1-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/bin/"
+  esmfversion = "8.0.1-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/"
+  ;esmfversion = "8.1.0bs27-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/"
+   esmfbindir = "/scratch1/NCEPDEV/nems/emc.nemspara/soft/esmf/"+esmfversion+"bin/"
      meshname = dirout+"mesh."+cres+".nc"
       esmfcmd = "ESMF_Scrip2Unstruct "+srcfile+" "+meshname+" 0 ESMF"
 
