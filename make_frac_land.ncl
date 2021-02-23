@@ -4,8 +4,8 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;**********************************************************
 begin
 
-    dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210201/"
-   dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210201/"
+   dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+   dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
 
    ; first replicates current baseline c96 test
    fv3res = (/     96,      96,     192,     192,     384,     384,     768/)
