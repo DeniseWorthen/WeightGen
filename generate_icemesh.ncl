@@ -12,12 +12,13 @@ load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
     ; specify locations to use
-    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
-    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210311/"
+    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210311/"
 
     ; specify the tripole resolution
-    cice6res = (/"mx100", "mx050", "mx025"/)
-    ;cice6res = (/"mx300"/)
+    ;cice6res = (/"mx100", "mx050", "mx025"/)
+    cice6res = (/"mx100"/)
+    ;cice6res = (/"mx025"/)
     ;cice6res = (/"mx072"/)
     nfiles = dimsizes(cice6res)
 
@@ -58,7 +59,7 @@ begin
                            cornerlonname)
 
     ; substitue local version of curvilinear_to_SCRIP here
-    my_curvilinear_to_SCRIP(srcfile, gf->$srclatname$, gf->$srclonname$, Opt)
+    my_curvilinear_to_SCRIP(srcfile, gf->$srclatname$, gf->$srclonname$, Opt, gf->area)
     delete(Opt)
 
 ;----------------------------------------------------------------------

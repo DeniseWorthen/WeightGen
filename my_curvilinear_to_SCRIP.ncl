@@ -20,11 +20,12 @@
 ;======================================================================
 undef("my_curvilinear_to_SCRIP")
 procedure my_curvilinear_to_SCRIP(FName[1]:string,lat2d[*][*]:numeric,\
-                               lon2d[*][*]:numeric,Opt[1]:logical)
+                               lon2d[*][*]:numeric,Opt[1]:logical,\
+                               grid_area[*][*]:numeric)
 local latlon_dims, nlat, nlon, fid, FileAtt, grid_siz, grid_corners, \
 grid_rank, FDimNames, FDimSizes, FDimUnlim, DummyAtt1, DummyAtt2, \
 GridCornerLat, GridCornerLon, grid_corner_lat, grid_corner_lon, grid_mask, \
-lat_type, lon_type, DEBUG, nc_file_type
+grid_area,lat_type, lon_type, DEBUG, nc_file_type
 begin
 ;---Check for options
     PrintTimings = isatt_logical_true(Opt,"PrintTimings")
@@ -83,6 +84,24 @@ begin
       grid_mask = 1
     end if
 
+;---Was an area provided?
+    ;grid_area_name = get_area_name(Opt)
+    ;grid_area_name = Opt@GridArea
+    ;if(grid_area_name.ne."") then
+    ;  if(.not.all(dimsizes(Opt@$grid_area_name$).eq.latlon_dims)) then
+    ;    print("curvilinear_to_SCRIP: Opt@" + grid_area_name + \
+    ;          " is not the correct dimensionality")
+    ;    exit
+    ;  else
+    ;    grid_area = Opt@$grid_area_name$
+    ;    grid_area = Opt@$
+    ;  end if
+    ;else
+;---No area
+     ; grid_area = new(latlon_dims, "double","No_FillValue")
+      ;grid_area = 1
+    ;end if
+
 ;---Create the file
     fid = addfile(FName,"c")
     setfileoption(fid,"DefineMode",True)
@@ -111,12 +130,15 @@ begin
     filevardef(fid,"grid_center_lat","double","grid_size")
     filevardef(fid,"grid_center_lon","double","grid_size")
     filevardef(fid,"grid_imask","integer","grid_size")
+    filevardef(fid,"grid_area","double","grid_size")
     filevardef(fid,"grid_corner_lat","double",(/ "grid_size", "grid_corners" /) )
     filevardef(fid,"grid_corner_lon","double",(/ "grid_size", "grid_corners" /) )
 
+    printVarSummary(grid_area)
 ;---Define the variables unit attribute
     DummyAtt1       = 0
     DummyAtt2       = 0
+    DummyAtt3       = 0
 ;
 ; The conversion to character arrays for NetCDF-4 files is a
 ; work-around.  ESMF_RegridWeightGen uses the F90 interface to
@@ -126,13 +148,16 @@ begin
     if(nc_file_type.eq."netcdf3") then
       DummyAtt1@units = "degrees"
       DummyAtt2@units = "unitless"
+      DummyAtt3@units = "m2"
     else
       DummyAtt1@units = tochar("degrees")
       DummyAtt2@units = tochar("unitless")
+      DummyAtt3@units = tochar("m2")
     end if
     filevarattdef(fid,"grid_center_lat",DummyAtt1)
     filevarattdef(fid,"grid_center_lon",DummyAtt1)
     filevarattdef(fid,"grid_imask",DummyAtt2)
+    filevarattdef(fid,"grid_area",DummyAtt3)
     filevarattdef(fid,"grid_corner_lat",DummyAtt1)
     filevarattdef(fid,"grid_corner_lon",DummyAtt1)
     delete(DummyAtt1)
@@ -158,6 +183,14 @@ begin
         fid->grid_imask=(/ tointeger(ndtooned(grid_mask)) /)
     end if
 	
+;---Store Cell Areas
+    if (grid_size.ne.dimsizes(ndtooned(grid_area))) then
+        print("curvilinear_to_SCRIP: Area array is not the appropriate size.")
+        exit
+    else
+        fid->grid_area=(/ndtooned(grid_area)/)
+    end if
+
 ;---Get the grid lat/lon corners
     if (isatt(Opt,"GridCornerLat").and.isatt(Opt,"GridCornerLon")) then
         if(DEBUG) then
