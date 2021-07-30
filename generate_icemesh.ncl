@@ -12,12 +12,14 @@ load "my_curvilinear_to_SCRIP.ncl"
 ;------------------------------------------------------------------
 begin
     ; specify locations to use
-    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
-    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+    ;dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+    ;dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
 
     ; specify the tripole resolution
-    cice6res = (/"mx100", "mx050", "mx025"/)
-    ;cice6res = (/"mx300"/)
+    ;cice6res = (/"mx100", "mx050", "mx025"/)
+    cice6res = (/"mx400"/)
     ;cice6res = (/"mx072"/)
     nfiles = dimsizes(cice6res)
 

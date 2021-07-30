@@ -4,16 +4,20 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 ;**********************************************************
 begin
 
-   dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
-   dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+   ;dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+   ;dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
+   dirsrc = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+   dirout = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
 
    ; first replicates current baseline c96 test
-   fv3res = (/     96,      96,     192,     192,     384,     384,     768/)
-  mom6res = (/"mx025", "mx100", "mx050", "mx100", "mx050", "mx025", "mx025"/)
+  ; fv3res = (/     96,      96,     192,     192,     384,     384,     768/)
+  ;mom6res = (/"mx025", "mx100", "mx050", "mx100", "mx050", "mx025", "mx025"/)
   ; fv3res = (/     96/)
   ;mom6res = (/"mx100"/)
   ; fv3res = (/    192/)
   ;mom6res = (/"mx050"/)
+   fv3res = (/     48/)
+  mom6res = (/"mx400"/)
 
     ntile = 6
    nfiles = dimsizes(fv3res)

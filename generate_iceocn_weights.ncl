@@ -38,25 +38,29 @@ begin
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
     generate_srcgrid_SCRIP_files = True
+    ; next four are to generate weights -> rectilinear grid
+    ; used for post
     generate_dstgrid_SCRIP_files = False
     generate_unstagger_weights = False
     generate_restagger_weights = False
     generate_tripole_rect_weights = False
     ; if set True, requires that the mx025 SCRIP file has been generated
+    ; used for regridding 025 tripole field -> lower resolution tripole grid
     generate_tripole_tripole_weights = True
 
     ; specify the MOM6 resolution
-    ; 025 must be run before 050 or 100 in order to generate
+    ; 025 must be run before lower resolutions in order to generate
     ; tripole to tripole weights
     ;cres = "mx025"
     ;cres = "mx050"
     ;cres = "mx100"
-    cres = "mx300"
-    ;cres = "mx072"
+    cres = "mx400"
 
     ; specify locations to use
-        dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
-        dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+    ;    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+    ;    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
+        dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+        dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
     ; interpolation methods
     methods     = (/"bilinear" ,"conserve"/)
 
@@ -270,13 +274,9 @@ begin
       srccres = "mx025"
       dstcres = "mx100"
     end if
-    if(cres .eq. "mx300")then              ; 1/4 => 3deg tripole
+    if(cres .eq. "mx400")then              ; 1/4 => 4deg tripole
       srccres = "mx025"
-      dstcres = "mx300"
-    end if
-    if(cres .eq. "mx072")then              ; 1/4 => 072deg tripole
-      srccres = "mx025"
-      dstcres = "mx072"
+      dstcres = "mx400"
     end if
     
     ; abort of the Ct SCRIP file for the mx025 grid has not yet been

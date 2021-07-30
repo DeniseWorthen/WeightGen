@@ -28,12 +28,12 @@ ESMF_VERSION="8.0.1-intel18.0.5.274-impi2018.0.4-netcdf4.7.4_parallel.release/"
 
 ESMF_BINDIR="/scratch1/NCEPDEV/nems/emc.nemspara/soft/esmf/"${ESMF_VERSION}/"bin"
 FIX_DIR="/scratch1/NCEPDEV/global/glopara/fix/fix_fv3_gmted2010"
-SCRIP_DIR="/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223"
-OUT_DIR="/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223"
+SCRIP_DIR="/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727"
+OUT_DIR="/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727"
 meth="conserve"
 
-declare -a sorcList=("Ct.mx025" "Ct.mx100" "Ct.mx050" "Ct.mx100" "Ct.mx050" "Ct.mx025" "Ct.mx025")
-declare -a destList=(     "C96"      "C96"     "C192"     "C192"     "C384"     "C384"     "C768")
+#declare -a sorcList=("Ct.mx025" "Ct.mx100" "Ct.mx050" "Ct.mx100" "Ct.mx050" "Ct.mx025" "Ct.mx025")
+#declare -a destList=(     "C96"      "C96"     "C192"     "C192"     "C384"     "C384"     "C768")
 #declare -a sorcList=("Ct.mx100" "Ct.mx050" "Ct.mx025" "Ct.mx025")
 #declare -a destList=("C96" "C192" "C384" "C96")
 
@@ -41,6 +41,8 @@ declare -a destList=(     "C96"      "C96"     "C192"     "C192"     "C384"     
 #declare -a destList=("C192")
 #declare -a sorcList=("Ct.mx025")
 #declare -a destList=("C384")
+declare -a sorcList=("Ct.mx400")
+declare -a destList=("C48")
 
 
 i=0
