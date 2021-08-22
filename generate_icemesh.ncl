@@ -14,12 +14,14 @@ begin
     ; specify locations to use
     ;dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
     ;dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210223/"
-    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
-    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    ;dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    ;dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-ufs-20210822/"
+    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-ufs-20210822/"
 
     ; specify the tripole resolution
-    ;cice6res = (/"mx100", "mx050", "mx025"/)
-    cice6res = (/"mx400"/)
+    cice6res = (/"mx400", "mx100", "mx050", "mx025"/)
+    ;cice6res = (/"mx400"/)
     ;cice6res = (/"mx072"/)
     nfiles = dimsizes(cice6res)
 
@@ -29,7 +31,7 @@ begin
             srcloc = dirsrc
           gridfile = "tripole."+cres+".nc"
        staggerlocs = (/"Ct"/)
-
+if(1 .eq. 0)then
 ;----------------------------------------------------------------------
 ; first generate SCRIP grid files
 ;----------------------------------------------------------------------
@@ -62,7 +64,9 @@ begin
     ; substitue local version of curvilinear_to_SCRIP here
     my_curvilinear_to_SCRIP(srcfile, gf->$srclatname$, gf->$srclonname$, Opt)
     delete(Opt)
-
+end if
+          ii = 0
+          srcfile = dirsrc+staggerlocs(ii)+"."+cres+"_SCRIP_land.nc"
 ;----------------------------------------------------------------------
 ; use the generated SCRIP file to create the mesh
 ;----------------------------------------------------------------------
@@ -79,7 +83,8 @@ begin
    print("converting to mesh using "+syscmd)
    system(syscmd)
 
-   delete([/srcfile, gf/])
+   ;delete([/srcfile, gf/])
+   delete([/srcfile/])
  end do ; nfiles
 exit
 end

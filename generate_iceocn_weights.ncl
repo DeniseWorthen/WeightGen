@@ -37,7 +37,7 @@ begin
 
     ; the weights need to generated one time only. The following
     ; flags will re-generate the chosen weights file
-    generate_srcgrid_SCRIP_files = True
+    generate_srcgrid_SCRIP_files = False
     ; next four are to generate weights -> rectilinear grid
     ; used for post
     generate_dstgrid_SCRIP_files = False
@@ -59,8 +59,10 @@ begin
     ; specify locations to use
     ;    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
     ;    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/GRIDS/"
-        dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
-        dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    ;    dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+    ;    dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-20210727/"
+        dirsrc  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-ufs-20210822/"
+        dirout  = "/scratch2/NCEPDEV/climate/Denise.Worthen/grids-ufs-20210822/"
     ; interpolation methods
     methods     = (/"bilinear" ,"conserve"/)
 
